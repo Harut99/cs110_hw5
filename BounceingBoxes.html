@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homework</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+<h1>Homework #5</h1>
+
+<canvas id="canvas" width="500" height="300"></canvas>
+
+
+
+<script>
+
+    let randcolor= ['purple','green','orange','yellow','red','blue','aqua','black','navy']
+    let colindex = Math.floor(Math.random()*randcolor.length);
+
+    let canvas = document.getElementById("canvas");
+
+    let context = canvas.getContext("2d");
+
+
+
+    const NUM_POINTS = 25; // play with this after you finished implementing draw, it's fun :-)
+
+
+
+    // create points
+
+    const points = [];
+
+    for(let i = 0; i < NUM_POINTS; i++) {
+
+        points.push({
+
+            x: (Math.random() * canvas.width)-50,
+
+            y: (Math.random() * canvas.height)-50,
+
+            height: Math.random() * 10 + 1,
+
+            xDelta: 1, // the change that you will add to x, you can flip it when you get to the edge
+
+            yDelta: 1, // the change that you will add to y, you can flip it when you get to the edge
+
+            color: randcolor[Math.floor(Math.random()*randcolor.length)]
+
+        });
+
+    }
+
+
+
+    const draw = function() {
+
+        // TODO: Put your code here
+
+        context.clearRect(0,0,canvas.width,canvas.height);// 1. clear the original canvas
+        context.fillStyle = 'black'; //      1. draw it
+        context.strokeRect(0,0,canvas.width,canvas.height);
+
+        points.forEach(function(p) { // 2. for each point
+            context.fillStyle = p.color; //       draw it
+            //context.fillRect(p.x,p.y,p.width,p.height);
+            context.beginPath();
+            context.arc(p.x,p.y, p.height,0,2*Math.PI);
+            context.fill();
+            //      add the point's xDelta and yDelta to the point's x and y
+            p.x += p.xDelta;
+            p.y += p.yDelta;
+            if(p.y - p.height <= 0 || p.y + p.height >= canvas.height){p.yDelta *= -1}//      check if the point has gone beyond the top or bottom of the canvas - if so, flip the yDelta
+            if(p.x - p.height <= 0 || p.x + p.height >= canvas.width){p.xDelta *= -1} //      check if the point has gone beyond left or right part of the canvas - if so, flip xDelta
+
+        });
+    };
+
+
+
+    let animate = function() {
+
+        draw();
+
+        setTimeout(animate, 20);
+
+    };
+
+    animate();
+
+
+
+</script>
+</body>
+</html>
